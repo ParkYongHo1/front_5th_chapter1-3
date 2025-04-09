@@ -8,9 +8,15 @@ export function memo<P extends object>(
 ) {
   const MemoComponent = (props: P) => {
     const propsRef = useRef<P | null>(null);
-    const componentRef = useRef<React.ReactElement | null>(null);
+    const componentRef = useRef<React.ReactElement>(
+      createElement(Component, props),
+    );
 
-    if (!_equals(propsRef.current, props)) {
+    if (
+      !propsRef.current ||
+      !componentRef.current ||
+      !_equals(propsRef.current, props)
+    ) {
       propsRef.current = props;
       componentRef.current = createElement(Component, props);
     }
